@@ -1,0 +1,5 @@
+**/.ipynb_checkpoints
+**/data/*
+
+# GCP key
+nomadic-grid-*.json
