@@ -163,7 +163,7 @@ docker run -it \
     taxi_ingest:001 \
         --user=root \
         --password=root \
-        --host=pg_database \
+        --host=pgdatabase \
         --port=5432 \
         --db=ny_taxi \
         --table=yellow_taxi_data \

@@ -13,3 +13,6 @@
     + notebook
     + pgcli
     + psycopg2-binary
+    + SQLAlchemy
+    + pandas
+    + pyarrow

@@ -3,3 +3,8 @@
 
 # GCP key
 nomadic-grid-*.json
+
+# Terraform (initialized by terraform init)
+**.terraform
+**.terraform.lock.*
+*.tfstate

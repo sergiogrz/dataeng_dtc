@@ -1,7 +1,0 @@
-# python==3.9
-pgcli
-psycopg2-binary
-notebook
-pandas
-pyarrow
-SQLAlchemy
