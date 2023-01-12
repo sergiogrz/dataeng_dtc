@@ -8,3 +8,4 @@ nomadic-grid-*.json
 **.terraform
 **.terraform.lock.*
 *.tfstate
+*.tfstate.*
