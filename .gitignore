@@ -1,6 +1,10 @@
 **/.ipynb_checkpoints
 **/data/*
 
+# NYC TLC data
+*.csv.*
+*.csv
+
 # GCP key
 nomadic-grid-*.json
 

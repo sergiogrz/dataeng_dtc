@@ -3,8 +3,8 @@
 
 import argparse
 import os
+from time import time
 import pandas as pd
-import pyarrow.parquet as pq  # convert parquet to pandas dataframe
 from sqlalchemy import create_engine  # connect to Postgres database
 
 
@@ -18,10 +18,15 @@ def main(params):
     table = params.table
     url = params.url
 
-    file_name = "output.parquet"
+    # the backup files are gzipped, and it's important to keep the correct extension
+    # for pandas to be able to open the file
+    if url.endswith(".csv.gz"):
+        csv_name = "output.csv.gz"
+    else:
+        csv_name = "output.csv"
 
-    # Download the parquet file
-    os.system(f"wget {url} -O {file_name}")
+    # Download the csv file
+    os.system(f"wget {url} -O {csv_name}")
 
     # Create a connection to Postgres
     # specify the database you want to use based on the docker run command we had
@@ -29,14 +34,32 @@ def main(params):
     engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{db}")
     engine.connect()
 
-    # Convert parquet file to pandas dataframe
-    trips = pq.read_table(file_name).to_pandas()
-
     # Generate the database schema
-    trips.head(0).to_sql(name=table, con=engine, if_exists="replace")
+    df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
+
+    df = next(df_iter)
+
+    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+
+    df.head(n=0).to_sql(name=table, con=engine, if_exists="replace")
 
     # Insert the data into the database
-    trips.to_sql(name=table, con=engine, if_exists="append", chunksize=100000)
+    df.to_sql(name=table, con=engine, if_exists="append")
+    while True:
+
+        try:
+            t_start = time()
+            df = next(df_iter)
+            df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+            df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+            df.to_sql(name=table, con=engine, if_exists="append")
+            t_end = time()
+            print(f"Inserted another chunk, took {(t_end - t_start):3f} seconds")
+
+        except StopIteration:
+            print("Finished ingesting data into the postgres database")
+            break
 
 
 if __name__ == "__main__":
@@ -51,7 +74,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--table", help="table name where the data will be populated into"
     )
-    parser.add_argument("--url", help="url of the parquet file")
+    parser.add_argument("--url", help="url of the csv file")
 
     args = parser.parse_args()
 

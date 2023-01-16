@@ -56,12 +56,17 @@ NYC Taxi and Limousine Commission dataset:
 [NYC Taxi Zones](https://data.cityofnewyork.us/Transportation/NYC-Taxi-Zones/d3c5-ddgc)  
 [Taxi Zone Lookup Table (csv)](https://d37ci6vzurychx.cloudfront.net/misc/taxi+_zone_lookup.csv)
 
-Useful link: [Working with parquet format](https://www1.nyc.gov/assets/tlc/downloads/pdf/working_parquet_format.pdf)
+> According to the [TLC data website](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page),
+> from 05/13/2022, the data will be in ```.parquet``` format instead of ```.csv```.
+> The website has provided a useful [link](https://www1.nyc.gov/assets/tlc/downloads/pdf/working_parquet_format.pdf) with sample steps to read ```.parquet``` file and convert it to Pandas data frame.
+>
+> You can use the csv backup for the NYC TLC dat located here: [https://github.com/DataTalksClub/nyc-tlc-data](https://github.com/DataTalksClub/nyc-tlc-data)
 
-Download Yellow Taxi Trip data from January 2022:
+
+Download Yellow Taxi Trip data from January 2021:
 
 ```bash
-wget https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet
+wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
 ```
 
 First, we make use of the notebook [upload_data.ipynb](upload_data.ipynb) to explore the dataset, create the database schema and write the data to the Postgres database. Later, in [Data ingestion pipeline script](#data-ingestion-pipeline-script) section, we will create a Python script to do this task.
@@ -121,7 +126,7 @@ docker run -it \
 Python script to do the data ingestion into the Postgres database:
 
 ```bash
-URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet"
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
 
 python ingest_data.py \
     --user=root \
@@ -156,7 +161,7 @@ If that is the case, follow the instructions:
 Run the container from the image, inside the network we have previously created, and with `pg_database` (Postgres container) as the name of the host:
 
 ```bash
-URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet"
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
 
 docker run -it \
     --network pg_network \
