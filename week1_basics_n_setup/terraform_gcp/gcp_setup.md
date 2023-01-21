@@ -8,7 +8,7 @@
 
 ## Initial setup
 
-For this course, we'll use a free version (upto EUR 300 credits). 
+For this course, we'll use a free version ($300 credits). 
 
 1. Create an account with your Google email ID. 
 2. Setup a [project](https://console.cloud.google.com/) and note down the "Project ID" (we'll use this later when deploying infra with TF).
