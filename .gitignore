@@ -13,3 +13,8 @@ nomadic-grid-*.json
 **.terraform.lock.*
 *.tfstate
 *.tfstate.*
+
+**logs/
+**.env
+
+**__pycache__/

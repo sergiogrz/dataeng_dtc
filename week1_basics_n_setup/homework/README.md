@@ -1,6 +1,7 @@
 # Week 1 homework
 
 In this homework we'll prepare the environment and practice with Docker and SQL.
+In the second part, we'll create resources in GCP with Terraform.
 
 > **NOTE**  
 > My solutions for this homework are in the [hw_solutions.md](./hw_solutions.md) file.
@@ -91,10 +92,13 @@ Note: it's not a typo, it's `tip` , not `trip`
 - Long Island City/Queens Plaza
 
 
-## Submitting the solutions
+# Part B - Create resources in GCP with Terraform
 
-* Form for submitting: [form](https://forms.gle/EjphSkR1b3nsdojv7)
-* You can submit your homework multiple times. In this case, only the last submission will be used. 
+After updating the main.tf and variables.tf files run:
 
-Deadline: 26 January (Thursday), 22:00 CET
+```
+terraform apply
+```
+
+Paste the output of this command into the homework submission form.
 

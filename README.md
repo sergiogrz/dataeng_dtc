@@ -26,7 +26,7 @@
 
 ### Arquitecture diagram
 
-<img src="architecture_diagram.png"/>
+<img src="images/architecture_diagram.png"/>
 
 ### Technologies
 

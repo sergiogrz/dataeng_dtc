@@ -140,3 +140,47 @@ limit 1;
 ```
 **Answer:** Long Island City/Queens Plaza
 
+
+## Part B - Create resources in GCP with Terraform
+
+Inside [homework/terraform](./terraform/) directory, where we have `main.tf` and `variables.tf` files, we run the following commands:
+
+```bash
+# Refresh service-account's auth-token for this session
+gcloud auth application-default login
+
+# Initialize state file (.tfstate)
+terraform init
+
+# Check changes to new infra plan
+terraform plan
+```
+
+Finally, we create the resources:
+
+```bash
+# Create new infra
+terraform apply
+```
+
+**Output:**
+
+```bash
+...
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+google_bigquery_dataset.dataset: Creating...
+google_storage_bucket.data-lake-bucket: Creating...
+google_storage_bucket.data-lake-bucket: Creation complete after 2s [id=<BUCKET_ID>]
+google_bigquery_dataset.dataset: Creation complete after 2s [id=<BIGQUERY_DATASET_ID>]
+
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+```
+
+
