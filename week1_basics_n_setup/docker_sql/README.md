@@ -1,18 +1,16 @@
 # Docker and SQL
 
-## Pipeline example
+## Table of contents
 
-Build the image from the Dockerfile:
+* [Running Postgres with Docker](#running-pgadmin-with-docker).
+    * [CLI for Postgres](#cli-for-postgres).
+* [Inserting NYC Taxi data to a Postgres database](#inserting-nyc-taxi-data-to-a-postgres-database).
+* [Running pgAdmin with Docker](#running-pgadmin-with-docker).
+* [Running Postgres and pgAdmin together](#running-postgres-and-pgadmin-together).
+* [Data ingestion pipeline script](#data-ingestion-pipeline-script).
+    * [Dockerizing the ingestion script](#dockerizing-the-ingestion-script).
+* [Running Postgres and pgAdmin with Docker Compose](#running-postgres-and-pgadmin-with-docker-compose).
 
-```bash
-docker build -t test:pandas .
-```
-
-Run the container, passing a specific date as an argument:
-
-```bash
-docker run -it test:pandas 2022-28-12
-```
 
 ## Running Postgres with Docker
 
