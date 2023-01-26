@@ -1,4 +1,4 @@
-# Week 2 - Workflow orchestration
+# Week 2 - Workflow orchestration (2022 cohort)
 
 ## Table of contents
 * [Introduction to workflow orchestration](#introduction-to-workflow-orchestration).
@@ -12,6 +12,7 @@
 * [Airflow in action](#airflow-in-action).
   * [Ingesting data to local Postgres with Airflow](#ingesting-data-to-local-postgres-with-airflow).
   * [Ingesting data to GCP](#ingesting-data-to-gcp).
+* [GCP Storage Transfer Service](#gcp-storage-transfer-service).
 
 
 **Sources:**
@@ -51,7 +52,7 @@ UPLOAD TO BIGQUERY
 
 ### Airflow arquitecture
 
-<img src="../images/airflow_arch_diag.png"/>
+<img src="../../images/airflow_arch_diag.png"/>
 
 [Reference](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html)
 
@@ -176,7 +177,7 @@ with DAG(
 
 DAG management is carried out via Airflow's web UI.
 
-![airflow ui](../images/airflow_ui.png)
+![airflow ui](../../images/airflow_ui.png)
 
 There are 2 main ways to run DAGs:
 * Triggering them manually via the web UI or programatically via API.
@@ -192,7 +193,7 @@ You may manually trigger a DAG by clicking on the Play button on the left of eac
 
 A more detailed view and options for each DAG can be accessed by clicking on the DAG's name.
 
-![dag details](../images/dag_details.png)
+![dag details](../../images/dag_details.png)
 
 
 ### Airflow and DAG tips and tricks
@@ -354,9 +355,9 @@ We want to run our Postgres setup locally as well as Airflow, and we will use th
         ```
     1. You should see the output of the `connect()` method. You may now exit the Python console and logout from the container.
 1. Open the Airflow dashboard and trigger the `data_ingestion_local_dag` DAG by clicking on the Play icon. Inside the detailed DAG view you will find the status of the tasks as they download the files and ingest them to the database. Note that the DAG will run as many times as stated in the drop down menu, which is 25 by default.
-    ![airflow DAG](../images/airflow_dag.png)
+    ![airflow DAG](../../images/airflow_dag.png)
 1. Click on any of the colored squares to see the details of the task.
-    ![task details](../images/task_details.png)
+    ![task details](../../images/task_details.png)
 1. As both the download and ingest tasks finish and the squares for both turn dark green, you may use `pgcli -h localhost -p 5432 -u root -d ny_taxi` on a separate terminal to check the tables on your local Postgres database. You should see a new table per run.
 1. Once you're finished, remember to use `docker-compose down` on both the Airflow and Postgres terminals.
     ```bash
@@ -373,7 +374,7 @@ We will now run another DAG that will have the following tasks:
 * Upload it to a GCP bucket.
 * And ingest it to GCP's BigQuery.
 
-1. Prepare a DAG for the aforementioned tasks. We will use [this DAG file](./airflow/dags/data_ingestion_gcs_dag.py).
+1. Prepare a DAG for the aforementioned tasks. We will use [this DAG file](./airflow_gcp/dags/data_ingestion_gcs_dag.py).
     * A `BashOperator` is used to download the dataset and then 2 `PythonOperator` tasks are used to format the file to parquet and then upload the file to a GCP bucket.
         * You may find more info on how to programatically upload to a bucket with Python [in this link](https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-python).
     * A `BigQueryCreateExternalTableOperator` is used for ingesting the data into BigQuery. You may read more about it [in this link](https://airflow.apache.org/docs/apache-airflow/1.10.12/_api/airflow/contrib/operators/bigquery_operator/index.html).
@@ -385,8 +386,15 @@ We will now run another DAG that will have the following tasks:
     ```sql
     SELECT * FROM `nomadic-grid-374211.trips_data_all.external_table` LIMIT 10
     ```
-    ![bigquery](../images/bigquery_1.png)
-    ![bigquery](../images/bigquery_2.png)
+    ![bigquery](../../images/bigquery_1.png)
+    ![bigquery](../../images/bigquery_2.png)
 1. You can also see the uploaded parquet file by searching the _Cloud Storage_ service, selecting your bucket and then clicking on the `raw/` folder. You may click on the filename to access an info panel.
-    ![cloud storage](../images/cloud_storage.png)
+    ![cloud storage](../../images/cloud_storage.png)
 1. You may now shutdown Airflow by running `docker-compose down` on the terminal where you run it.
+
+
+## GCP Storage Transfer Service
+
+[Storage Transfer Service](https://cloud.google.com/storage-transfer-service) is a GCP service to transfer data from multiple sources to Google Cloud Storage. This is useful for Data Lake purposes.
+
+Transfer Service *jobs* can be created via the GCP GUI or with Terraform.
