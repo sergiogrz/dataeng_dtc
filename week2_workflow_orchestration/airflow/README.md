@@ -1,5 +1,11 @@
 # Week 2 - Workflow orchestration (2022 cohort)
 
+## Directory structure
+* [Ingest data to GCP with Airflow](./airflow_gcp/).
+* [Ingest data to local Postgres with Airflow](./airflow_local/).
+* [Week 2 homework](./homework/).
+
+
 ## Table of contents
 * [Introduction to workflow orchestration](#introduction-to-workflow-orchestration).
 * [Apache Airflow](#apache-airflow).
