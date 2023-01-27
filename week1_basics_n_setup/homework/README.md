@@ -1,10 +1,10 @@
 # Week 1 homework
 
-In this homework we'll prepare the environment and practice with Docker and SQL.
-In the second part, we'll create resources in GCP with Terraform.
-
 > **NOTE**  
 > My solutions for this homework are in the [hw_solutions.md](./hw_solutions.md) file.
+
+In this homework we'll prepare the environment and practice with Docker and SQL.
+In the second part, we'll create resources in GCP with Terraform.
 
 ## Question 1. Knowing docker tags
 
@@ -92,7 +92,7 @@ Note: it's not a typo, it's `tip` , not `trip`
 - Long Island City/Queens Plaza
 
 
-# Part B - Create resources in GCP with Terraform
+## Part B - Create resources in GCP with Terraform
 
 After updating the main.tf and variables.tf files run:
 

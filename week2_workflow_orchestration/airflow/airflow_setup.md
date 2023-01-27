@@ -13,6 +13,10 @@
 
 1. Python version: 3.7+
 
+## Reference
+
+Check this [reference](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html) about running Airflow in Docker.
+
 
 ## Airflow setup (full version)
 
