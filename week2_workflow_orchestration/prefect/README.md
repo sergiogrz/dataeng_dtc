@@ -5,15 +5,33 @@
 
 
 ## Table of contents
+* [Prerequisites: infrastructure deployment](#prerequisites-infrastructure-deployment).
 * [Introduction to Prefect concepts](#introduction-to-prefect-concepts).
     + [Flow](#flow).
     + [Task](#task).
     + [Block](#block).
     + [From Python script to Prefect workflow](#from-python-script-to-prefect-workflow).
 * [ETL with GCP and Prefect](#etl-with-gcp-and-prefect).
+* [From Google Cloud Storage to Big Query](#from-google-cloud-storage-to-big-query).
 
 **Sources:**
 * DataTalksClub [videos](https://www.youtube.com/watch?v=W3Zm6rjOq70&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=17).
+
+
+## Prerequisites: infrastructure deployment
+
+Run Postgres and pgAdmin:
+
+```bash
+docker-compose -f ../../docker-compose.yml up -d
+```
+
+To shut it down:
+
+```bash
+docker-compose -f ../../docker-compose.yml down
+```
+
 
 ## Introduction to Prefect concepts
 
@@ -62,33 +80,25 @@
 * For securely store credentials for authenticating with services like AWS, GitHub, Slack, or any other system you'd like to orchestrate with Prefect.
 
 
-
 ### From Python script to Prefect workflow 
 
-We are starting from our basic Python script `ingest_data.py` from first week, which pulls yellow taxi data into our Postgres database, and we will transform
-this script to be orchestrated with Prefect.
-
-First, we deploy the infrastructure with Postgres and pgAdmin.
-
-```bash
-docker-compose -f ../../docker-compose.yml up -d
-```
+We are starting from our basic Python script `ingest_data.py` from first week, which pulls yellow taxi data into our Postgres database, and we will transform this script to be orchestrated with Prefect.
 
 
-Initial [`ingest_data.py`](./ingest_data.py).
+Initial [`ingest_data.py`](./flows/01_start/ingest_data.py).
 
 
 We can run the script and then check via pgAdmin or pgcli that that the data have been correctly loaded into the database.
 
 ```bash
-python ingest_data.py
+python ./flows/01_start/ingest_data.py
 ```
 
 Now, we will transform the script to work as a Prefect workflow. For that:
 * We make use of Prefect flows (and subflows) and tasks.
 * We break `ingest_data` function into smaller pieces or tasks, so that we can have more visibility into each of these steps. These are: `extract_data`, `transform_data` and `load_data`.
 * We create a connection block to connect with the Postgres database.
-    + For that, we have previously installed the `prefect-sqlalchemy` [Prefect Collection](https://docs.prefect.io/collections/catalog/) via the `requirements.txt` file.
+    + For that, we have previously installed the [`prefect-sqlalchemy`](https://prefecthq.github.io/prefect-sqlalchemy/) from the [Prefect Collection](https://docs.prefect.io/collections/catalog/) via the `requirements.txt` file.
     + In order to use it, we need to set the Postgres connection block through the UI (`Blocks -> Add blocks -> SQLAlchemy Connector`), with the following configuration
         ```
         { "driver": "postgresql+psycopg2", "database": "ny_taxi", "username": "root", "password": "root", "host": "localhost", "port": "5432" }
@@ -106,16 +116,61 @@ prefect orion start
 prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
 ```
 
-After modifications are made: [`ingest_data_flow.py`](./ingest_data_flow.py).
-
-
-To shut Postgres and pgAdmin down:
+After modifications are made: [`ingest_data_flow.py`](./flows/01_start/ingest_data_flow.py).
 
 ```bash
-docker-compose -f ../../docker-compose.yml down
+python ./flows/01_start/ingest_data_flow.py
 ```
 
 
 ## ETL with GCP and Prefect
 
 [Video source](https://www.youtube.com/watch?v=W-rMz_2GwqQ&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=20).
+
+We will look at more advanced use cases and perform some extract transform and load operations to Google Cloud platform.
+
+In this session, we create the [`etl_web_to_gcs.py`](./flows/01_start/ingest_data_flow.py) script, where we:
+* Download yellow taxi data from the web.
+* Do some data transformation.
+* Save locally as a parquet file.
+* Load the resulting file into Google Cloud Storage.
+
+Here is the workflow structure:
+
+```
+@flow: etl_to_gcs(...)
+|_ @task: fetch(...)
+|_ @task: clean(...)
+|_ @task: write_local(...)
+|_ @task: write_gcs(...)
+```
+
+Before we run the script, we need to add blocks to be able to work with GCP:
+* First, we register the GCP blocks from the [`prefect_gcp`](https://prefecthq.github.io/prefect-gcp/) module that we have previously installed.
+
+    ```bash
+    prefect block register -m prefect_gcp
+    ```
+* Then we configure the blocks that we need from the Blocks page in the Prefect UI.
+    + GCS Bucket.
+        - Block name: dataeng-dtc-gcs-bucket
+        - Bucket: <name of the bucket created in GCS>
+        - GCP credentials: dataeng-dtc-gcp-credentials (created below)
+    + GCP Credentials.
+        - Block name: dataeng-dtc-gcp-credentials
+        - Service account info: <data copied from our google credentials file at ~/.google/credentials/google_credentials.json>
+
+![prefect bucket block](../../images/prefect_ui_bucket_block.png)
+
+
+Finally, we can run the script and check in Prefect UI and in GCS that it works as expected.
+
+```bash
+python ./flows/02_gcp/etl_web_to_gcs.py
+```
+
+
+## From Google Cloud Storage to Big Query
+
+[Video source](https://www.youtube.com/watch?v=Cx5jt-V5sgE&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=21).
+
