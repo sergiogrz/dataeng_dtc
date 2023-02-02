@@ -9,12 +9,13 @@
     + python >= 3.9
     + terraform
     + google cloud SDK
-* Python package requirements:
-    + notebook
-    + pgcli
-    + psycopg2-binary
-    + SQLAlchemy
-    + pandas
+* Python package requirements: see [`requirements.txt`](./requirements.txt)
+
+  ```bash
+  conda create -n <env_name> python=3.9
+  conda activate <env_name>
+  pip install -r requirements.txt
+  ```
 
 
 ## Course structure
