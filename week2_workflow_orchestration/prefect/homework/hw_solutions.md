@@ -66,20 +66,57 @@ prefect deployment run etl-gcs-to-bq-parent/etl_hw --params='{"color": "yellow",
 
 ## Question 4. Github Storage Block
 
+For this question, based on the [`etl_web_to_gcs.py`](../flows/02_gcp/etl_web_to_gcs.py) script, we generate[`etl_web_to_gcs_hw_q4.py`](./etl_web_to_gcs_hw_q4.py).
 
+>**NOTE:** for this question I created a new repository where I copied this python script in the root, as well as a >non empty `data/green` folder. I was not able to do otherwise.
 
+After pushing the file to the GitHub repository, we create a GitHub storage block from the UI.
+
+We build and apply a deployment, and then we run it with the values that we need for the parameters.
+
+```bash
+prefect deployment build etl_web_to_gcs_hw_q4.py:etl_web_to_gcs \
+    --name=etl_hw_q4 \
+    --storage-block=github/dataeng-dtc-gh \
+    --apply
+
+prefect deployment run etl-web-to-gcs/etl_hw_q4 --params='{"color": "green", "year": 2020, "month": 11}'
+```
+
+**Answer:** Total number of rows processed: 88,605.
 
 ## Question 5. Email or Slack notifications
 
+Steps:
+* Create a [Prefect Cloud account] (https://app.prefect.cloud/).
+* Create a workspace from the Prefect Cloud UI.
+* Log in by running `prefect cloud login`.
+* As we did in Prefect Orion UI, create the necessary blocks in the new Prefect Cloud Workspace:
+  * GitHub.
+  * GCP Credentials.
+  * GCS Bucket (available after running `prefect block register -m prefect_gcp`).
+  * One additional block that we need for this question: Email.
+* We set up an automation to receive an email when a flow run completes: 
+  `Automations > + > Run state: completed > Send a notification / Block: email`.
 
+We build and apply the deployment, and run it with the values that we need for the parameters.
+
+```bash
+prefect deployment build etl_web_to_gcs_hw_q4.py:etl_web_to_gcs \
+    --name=etl_hw_q4 \
+    --storage-block=github/dataeng-dtc-gh \
+    --apply
+
+prefect deployment run etl-web-to-gcs/etl_hw_q4 --params='{"color": "green", "year": 2019, "month": 4}'
+```
+
+
+**Answer:** The number of rows processed is 514,392.
 
 
 ## Question 6. Secrets
 
-From Prefect UI: Blocks > Add block > Secret > Block name + value > Create
-
-![prefect secret block](../../../images/prefect_secret_block.png).
-
+From Prefect UI: `Blocks > Add block > Secret > Block name + value > Create`
 
 **Answer:** 8 characters are shown as asterisks.
 
