@@ -18,3 +18,7 @@ nomadic-grid-*.json
 **.env
 
 **__pycache__/
+
+# Prefect
+*.prefectignore
+*deployment.yaml
