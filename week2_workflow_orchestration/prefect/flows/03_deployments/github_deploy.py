@@ -7,7 +7,8 @@ github_block = GitHub.load("dataeng-dtc-gh")
 github_dep = Deployment.build_from_flow(
     flow=etl_parent_flow,
     name="github-flow",
-    infrastructure=github_block,
+    storage=github_block,
+    entrypoint="parameterized_flow.py:etl_parent_flow",
 )
 
 if __name__ == "__main__":

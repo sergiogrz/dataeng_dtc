@@ -3,6 +3,8 @@
 
 ## Table of contents
 * [Prerequisites: infrastructure deployment](#prerequisites-infrastructure-deployment).
+* [Data Lake](#data-lake).
+* [Introduction to workflow orchestration](#introduction-to-workflow-orchestration).
 * [Introduction to Prefect concepts](#introduction-to-prefect-concepts).
     + [Flow](#flow).
     + [Task](#task).
@@ -27,6 +29,7 @@
 * Prefect [docs](https://docs.prefect.io/).
 
 
+
 ## Prerequisites: infrastructure deployment
 
 Run Postgres and pgAdmin:
@@ -40,6 +43,94 @@ To shut it down:
 ```bash
 docker-compose -f ../../docker-compose.yml down
 ```
+
+
+## Data Lake
+
+### What is a Data Lake?
+
+* Central repository that holds big data from many sources.
+* The data in a Data Lake could be either structured, unstructured or a mix of both.
+* The main goal behind a Data Lake is being able to ingest data as quickly as possible and making it available to the other team members.
+* A Data Lake solution should be:
+  * Secure.
+  * Scalable.
+  * Able to run on inexpensive hardware.
+
+![data lake](../../images/data_lake.png)
+
+
+### Data Lake vs Data Warehouse
+
+There are several differences between Data Lakes (DL) and Data Warehouses (DW):
+* Data processing
+  * DL: The data is raw and has undergone minimal processing. Generally unstructured.
+  * DW: the data is refined; it has been cleaned, pre-processed and structured for specific use cases.
+* Size
+  * DL: Data Lakes are large and contain vast amounts of data, in the order of petabytes. Data is transformed when in use only and can be stored indefinitely.
+  * DW: Data Warehouses are small in comparison with DLs. Data is always preprocessed before ingestion and may be purged periodically.
+* Nature
+  * DL: data is undefined and can be used for a wide variety of purposes.
+  * DW: data is historic and relational, such as transaction systems, etc.
+* Users
+  * DL: Data scientists, data analysts.
+  * DW: Business analysts.
+* Use cases
+  * DL: Stream processing, machine learning, real-time analytics...
+  * DW: Batch processing, business intelligence, reporting.
+
+
+### ETL vs ELT
+
+* Extract, Transform and Load (ETL).
+  * Usually small amounts of data.
+  * Data Warehouse solution.
+  * Schema on Write:
+    * You define a well defined schema, relationships, and then you write the data.
+    * Data is transformed (preprocessed, etc) before arriving at its final destination.
+
+* Extract, Load and Transform (ELT).
+  * Large amounts of data.
+  * Data Lake solution.
+  * Schema on Read:
+    * You write the data first, and determine the schema on read.
+    * Data is directly stored without any transformations and any schemas are derived when reading the data from the DL.
+
+
+### Data Lake Cloud providers
+* GCP: [Cloud Storage](https://cloud.google.com/storage).
+* AWS: [Amazon S3](https://aws.amazon.com/es/s3/).
+* Azure: [Azure Blob Storage](https://azure.microsoft.com/products/storage/blobs/).
+
+
+## Introduction to workflow orchestration
+
+In the previous lesson we created a pipeline script that downloaded a CSV file and processed it so that we could ingest it to Postgres.
+
+The script we created is an example of how NOT to create a pipeline, because it contains 2 steps which ideally should be splitted. The reason is that we should isolate the operations involved in case there may be some issues with any of them.
+
+Ideally, each of these steps would be contained as separate entities, like for example 2 separate scripts. For our pipeline, that would look like this:
+
+(web) → DOWNLOAD → (csv) → INGEST → (Postgres)
+
+We have now separated our pipeline into a DOWNLOAD script and an INGEST script.
+
+This type of workflow is often called a **Directed Acyclic Graph (DAG)** because it lacks any loops and the data flow is well defined.
+
+The steps in capital letters are our **jobs** and the objects in between are the jobs outputs, which behave as **dependencies** for other jobs. Each job may have its own set of **parameters** and there may also be global parameters which are the same for all of the jobs.
+
+
+### Workflow orchestration tools
+
+A workflow orchestration tool allows us to define data workflows and parametrize them; it also provides additional tools such as history and logging. The are many tools specifically created for defining workflows, for example:
+
+* [Apache Airflow](https://airflow.apache.org/).
+* [Prefect](https://www.prefect.io/).
+* [Luigi](https://luigi.readthedocs.io/en/stable/).
+* [Argo](https://argoproj.github.io/).
+
+A workflow orchestration tool is going to allow us to turn any code into a workflow that we can schedule, run and observe.
+
 
 
 ## Introduction to Prefect concepts
