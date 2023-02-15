@@ -22,3 +22,6 @@ nomadic-grid-*.json
 # Prefect
 *.prefectignore
 *deployment.yaml
+
+# Spark-GCS
+*lib
