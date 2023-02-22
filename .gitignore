@@ -1,5 +1,6 @@
 **/.ipynb_checkpoints
 **/data/*
+*tmp_dir
 
 # NYC TLC data
 *.csv.*
@@ -25,3 +26,6 @@ nomadic-grid-*.json
 
 # Spark-GCS
 *lib
+
+# BigQuery ML models
+*serving_dir
