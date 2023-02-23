@@ -1,4 +1,4 @@
-# Week 2 Homework (Prefect 2023 cohort)
+# Week 2 homework (Prefect 2023 cohort)
 
 > **NOTE**  
 > My solutions for this homework are in the [hw_solutions.md](./hw_solutions.md) file.

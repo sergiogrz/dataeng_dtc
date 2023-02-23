@@ -1,4 +1,4 @@
-# Week 3 Homework
+# Week 3 homework
 
 > **NOTE**  
 > My solutions for this homework are in the [hw_solutions.md](./hw_solutions.md) file.
