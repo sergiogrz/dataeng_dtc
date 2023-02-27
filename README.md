@@ -24,7 +24,7 @@
 1. [Week 1 - Basics and setup](./week1_basics_n_setup/)
 2. [Week 2 - Workflow orchestration](./week2_workflow_orchestration/)
 3. [Week 3 - Data Warehouse](./week3_data_warehouse/)
-4. ...
+4. [Week 4 - Analytics engineering](./week4_analytics_engineering/)
 5. [Week 5 - Batch processing](./week5_batch_processing/)
 
 **IMPORTANT:** Be sure to follow the instructions contained in the [`extra_prepare_taxi_data`](./extra_prepare_taxi_data/) directory to avoid discrepancies or errors regarding source data format.
