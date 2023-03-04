@@ -157,5 +157,9 @@ We can take one of the two ways below to follow the dbt lessons:
 
 Before we begin, we create in BigQuery two new empty datasets: one for the models during development phase, and another one for the deployment/production environment. We name them as _dbt_development_ and _dbt_deployment_.
 
-In order to use dbt Cloud we need to create a [user account](https://www.getdbt.com/). 
+We need to create a dbt cloud account using [this link](https://www.getdbt.com/signup/) and connect to our
+warehouse [following these instructions](https://docs.getdbt.com/docs/collaborate/manage-access/set-up-bigquery-oauth). More detailed instructions in [dbt_cloud_setup.md](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/week_4_analytics_engineering/dbt_cloud_setup.md).
 
+We make sure that to set up a GitHub repo for our project. In Account settings > Projects we can select our project and change its settings, such as Name or dbt Project Subdirectory, which can be convenient if our repo is previously populated and would like to keep the dbt project in a single subfolder.
+
+In order to initialize a dbt project, in the dbt console main page, we create a new branch (since _main_ is _read-only_) and then click on _Initialize dbt project_.
